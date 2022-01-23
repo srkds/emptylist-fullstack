@@ -27,7 +27,7 @@ exports.getItem = (req, res) => {
 exports.getAllItems = (req, res) => {
   Item.find().exec((err, items) => {
     if (err) {
-      return res.status(400).json({ error: `No categories found! : ${err}` });
+      return res.status(400).json({ error: `No Items found! : ${err}` });
     }
     res.json(items);
   });

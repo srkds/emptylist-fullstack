@@ -9,9 +9,9 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import { createItem } from "./helper/itemapi";
+import { createItem, getItems } from "./helper/itemapi";
 
 function App() {
   const [values, setValues] = useState({
@@ -24,6 +24,20 @@ function App() {
   const [items, setItems] = useState([]);
 
   const { name, description, icon, price } = values;
+
+  const loadAllItems = () => {
+    getItems().then((data) => {
+      if (data.error) {
+        console.log(data.error);
+      } else {
+        setItems(data);
+      }
+    });
+  };
+
+  useEffect(() => {
+    loadAllItems();
+  }, []);
 
   const handleChange = (name) => (event) => {
     setValues({ ...values, [name]: event.target.value });
@@ -92,17 +106,17 @@ function App() {
     );
   };
 
-  const itemUI = () => {
+  const itemUI = (item, index) => {
     return (
-      <Card variant="outlined">
+      <Card key={index} className="mb-2" variant="outlined">
         <CardContent>
-          <h1>🖥</h1>
+          <h1>{item.icon}</h1>
           <Typography variant="h5" component="h2">
-            sdasfaf
+            {item.name}
           </Typography>
-          <Typography color="textSecondary">adjective</Typography>
+          <Typography color="textSecondary">{item.description}</Typography>
           <Typography variant="body2" component="p">
-            $ well meaning and kindly.
+            ₹ {item.price}
           </Typography>
         </CardContent>
       </Card>
@@ -111,10 +125,16 @@ function App() {
 
   return (
     <div className="container p-4">
+      {/* {console.log(items)} */}
       <div className="row">
-        <div className="col-6"> {formUI()}</div>
-        <div className="col-6">{itemUI()}</div>
-        <p>{JSON.stringify(values)}</p>
+        <div className="col-6">{formUI()}</div>
+        <div className="col-6">
+          <h3>Next I Want This</h3>
+          {items.map((item, index) => {
+            return itemUI(item, index);
+          })}
+        </div>
+        {/* <p>{JSON.stringify(values)}</p> */}
       </div>
     </div>
   );

@@ -14,3 +14,14 @@ export const createItem = (item) => {
     })
     .catch((err) => console.log(err));
 };
+
+// GET ALL Items
+export const getItems = () => {
+  return fetch(`${API}/item`, {
+    method: "GET",
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .catch((err) => console.log(err));
+};
